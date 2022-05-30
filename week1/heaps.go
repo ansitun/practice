@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 )
 
 type MaxHeap []int
@@ -13,10 +12,14 @@ func main() {
 	minHeap := make(MinHeap, 0)
 	maxHeap := make(MaxHeap, 0)
 	nums := make([]int, 0)
-
+	input := make([]int, 0)
+	for i := 1; i <= 50000; i++ {
+		input = append(input, i)
+	}
 	// addition of an element to min and max heap for a data stream of medians
-	for j := 0; j < 9; j++ {
-		num := rand.Intn(20000)
+	for j := 0; j < 50000; j++ {
+		// rand.Intn(20000)
+		num := input[j]
 		fmt.Printf("--> New Number %d\n", num)
 		nums = append(nums, num)
 
@@ -28,26 +31,43 @@ func main() {
 			minHeap.push(&minHeap, maxHeap.pop(&maxHeap))
 		} else if balance < 0 {
 			maxHeap.push(&maxHeap, minHeap.pop(&minHeap))
+		} else {
+			if len(minHeap) > 0 && (maxHeap)[0] > (minHeap)[0] {
+				temp := minHeap[0]
+				temp2 := maxHeap[0]
+				minHeap[0] = temp2
+				maxHeap[0] = temp
+			}
 		}
 
-		fmt.Print("MaxHeap ---> ")
-		for x := 0; x < len(maxHeap); x++ {
-			fmt.Printf("%d ", maxHeap[x])
-		}
-		fmt.Println()
+		//fmt.Print("MaxHeap ---> ")
+		//for x := 0; x < len(maxHeap); x++ {
+		//	fmt.Printf("%d ", maxHeap[x])
+		//}
+		//fmt.Println()
+		//
+		//fmt.Print("MinHeap ===> ")
+		//for x := 0; x < len(minHeap); x++ {
+		//	fmt.Printf("%d ", minHeap[x])
+		//}
+		//fmt.Println()
 
-		fmt.Print("MinHeap ===> ")
-		for x := 0; x < len(minHeap); x++ {
-			fmt.Printf("%d ", minHeap[x])
+		median := 0.0
+		if len(maxHeap) > len(minHeap) {
+			median = float64((maxHeap)[0])
+		} else if len(maxHeap) < len(minHeap) {
+			median = float64((minHeap)[0])
+		} else {
+			median = float64((maxHeap)[0]+(minHeap)[0]) / 2.0
 		}
-		fmt.Println()
+		fmt.Printf(" For Index = %d The Median is ===> %f\n", j+1, median)
 	}
 
-	fmt.Print("Input array ===> ")
-	for x := 0; x < len(nums); x++ {
-		fmt.Printf("%d ", nums[x])
-	}
-	fmt.Println()
+	//fmt.Print("Input array ===> ")
+	//for x := 0; x < len(nums); x++ {
+	//	fmt.Printf("%d ", nums[x])
+	//}
+	//fmt.Println()
 }
 
 func checkBalance(maxHeap MaxHeap, minHeap MinHeap) int {
